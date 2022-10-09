@@ -12,12 +12,14 @@ BATCH_SIZE = 1000
 LR = 0.001
 
 class Agent(object):
-    def __init__(self):
+    def __init__(self, load=False):
         self.n_games = 0
         self.epsilon = 0
         self.gamma = 0.9
         self.memory = deque(maxlen=MAX_MEMORY)
         self.model = Linear_QNet(11, 256, 3)
+        if load:
+            self.model.load('./models/model.pth')
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
     def get_state(self, game):
@@ -96,7 +98,7 @@ def train():
     plot_mean_scores = []
     total_score = 0
     record = 0
-    agent = Agent()
+    agent = Agent(load=False)
     game = SnakeGameAI()
     while True:
         state_old = agent.get_state(game)
